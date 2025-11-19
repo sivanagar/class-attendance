@@ -1,3 +1,5 @@
-export default function Dashboard() {
-  return <div>Dashboard</div>
+
+export default async function Dashboard() {
+  
+  return <div>Dashboard - under construction</div>;
 }

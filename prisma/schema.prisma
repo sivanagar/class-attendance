@@ -18,6 +18,10 @@ model User {
     classes   Class[]  
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
+
+    accounts Account[]
+
+    sessions Session[]
 }
 
 
@@ -64,4 +68,44 @@ model Attendance {
     attended  Boolean @default(false)
     student   Student  @relation(fields: [studentId], references: [id])
     class     Class    @relation(fields: [classId], references: [id])
+}
+
+
+
+///------------------------------------
+/// NextAuth Models
+///------------------------------------
+
+model Account {
+  id                 Int       @id @default(autoincrement())
+  userId             Int
+  type               String
+  provider           String
+  providerAccountId  String
+  refresh_token      String?   @db.Text
+  access_token       String?   @db.Text
+  expires_at         Int?
+  token_type         String?
+  scope              String?
+  id_token           String?   @db.Text
+  session_state      String?
+  user               User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([provider, providerAccountId])
+}
+
+model Session {
+  id           Int      @id @default(autoincrement())
+  sessionToken String   @unique
+  userId       Int
+  expires      DateTime
+  user         User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model VerificationToken {
+  identifier String
+  token      String @unique
+  expires    DateTime
+
+  @@unique([identifier, token])
 }
