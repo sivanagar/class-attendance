@@ -1,0 +1,12 @@
+///------------------------------------
+/// Student Model (The attendees)
+///------------------------------------
+model Student {
+    id        Int      @id @default(autoincrement())
+    firstName String
+    lastName  String
+    classes   Class[]    @relation("ClassStudents")
+    attendances Attendance[]
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+}

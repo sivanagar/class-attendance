@@ -1,0 +1,14 @@
+
+///------------------------------------
+/// Attendance Model
+///------------------------------------
+model Attendance {
+    id        Int      @id @default(autoincrement())
+
+    studentId Int
+    classId   Int
+    date      DateTime
+    attended  Boolean @default(false)
+    student   Student  @relation(fields: [studentId], references: [id])
+    class     Class    @relation(fields: [classId], references: [id])
+}

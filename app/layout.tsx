@@ -3,6 +3,7 @@ import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
+import { Button } from "@/components/ui/button";
 
 
 const geistSans = Geist({
@@ -27,26 +28,38 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      {/* <head>
+         <script
+          async
+          crossOrigin="anonymous"
+          src="https://tweakcn.com/live-preview.min.js"
+        />
+      </head> */}
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <div className="flex min-h-screen flex-col bg-background">
        
        
-        <header className="p-4 bg-gray-800 text-white text-center">
-          
-          <h1 className="text-2xl font-bold">Class Attendance App</h1>
-          <nav className="mt-2">
-            <Link href="/" className="mx-2 hover:underline">Home</Link>
-            <Link href="/dashboard" className="mx-2 hover:underline">Dashboard</Link>
-            
-          </nav>
-        </header>
+        {/* 1. Minimal Navbar */}
+      <header className="flex h-16 items-center justify-between border-b px-6 lg:px-10">
+        <div className="text-xl font-bold tracking-tight">Attendify</div>
+        <nav>
+          <Link href="/login">
+            <Button variant="ghost">Log in</Button>
+          </Link>
+          <Link href="/signup" className="ml-2">
+            <Button>Get Started</Button>
+          </Link>
+        </nav>
+      </header>
+      <main className="flex-1">{children}</main>
         
-        {children}
-        <footer className="p-4 bg-gray-800 text-white text-center mt-8">
+        
+        <footer >
           <p>&copy; 2024 Class Attendance App. All rights reserved.</p>
         </footer>
-        
+        </div>
       </body>
     </html>
   );
