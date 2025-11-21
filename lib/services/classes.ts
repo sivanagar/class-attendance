@@ -1,3 +1,4 @@
+'use server';
 import {prisma} from "@/lib/prisma";
 
 export async function getClassById(id: number) {
@@ -9,7 +10,7 @@ export async function getClassById(id: number) {
     });
 }
 
-export async function getAllClasses() {
+export async function getAllClasses(p0: { include: { students: boolean; }; }) {
     return prisma.class.findMany({
         include: {
             students: true,

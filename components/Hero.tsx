@@ -1,13 +1,12 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 
-export default function HomePage() {
+export default function Hero() {
   return <div className="mx-auto">
-        {/* 2. The Hero Section */}
         <section className="space-y-6 pb-8  pt-6 md:pb-12 md:pt-10 lg:py-32">
           <div className="container flex mx-auto max-w-5xl flex-col items-center gap-4 text-center">
             
-            {/* Optional: A "New" Badge */}
+            {/* Badge */}
             <div className="rounded-2xl bg-muted px-4 py-1.5 text-sm font-medium text-muted-foreground">
               Simplify your classroom management.
             </div>

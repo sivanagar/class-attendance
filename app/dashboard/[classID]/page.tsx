@@ -1,4 +1,5 @@
 import { getClassById } from "@/lib/services/classes";
+import EditClassDialog from "@/components/dashboard/EditClassDialog";
 import {
   Dialog,
   DialogContent,
@@ -40,8 +41,11 @@ import {
   Pencil, 
   Trash2, 
   Play, 
-  BarChart3 
+  BarChart3, 
+  Edit
 } from "lucide-react";
+import AddStudentDialog from "@/components/dashboard/AddStudentDialog";
+import StudentsTable from "@/components/dashboard/StudentsTable";
 interface ClassPageProps {
   params: Promise<{ classID: string }>; 
 }
@@ -67,32 +71,9 @@ export default async function ClassPage({ params }: ClassPageProps) {
           <h2 className="text-3xl font-bold tracking-tight">{classDetails.name}</h2>
         </div>
         <div className="flex items-center space-x-2">
-            <Dialog>
-            <DialogTrigger asChild>
-              <Button variant="outline">
-                <Pencil className="mr-2 h-4 w-4" /> Edit Class
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <DialogHeader>
-                <DialogTitle>Edit Class Details</DialogTitle>
-                <DialogDescription>Update description or class name.</DialogDescription>
-              </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="grid gap-2">
-                  <Label htmlFor="name">Class Name</Label>
-                  <Input id="name" defaultValue="Mathematics 101" />
-                </div>
-                <div className="grid gap-2">
-                  <Label htmlFor="description">Description</Label>
-                  <Input id="description" defaultValue={classDetails.description ?? ""} />
-                </div>
-              </div>
-              <DialogFooter>
-                <Button type="submit">Save changes</Button>
-              </DialogFooter>
-            </DialogContent>
-          </Dialog>
+         
+          <EditClassDialog id={classID} name={classDetails.name} description={classDetails.description} />
+         
           <Button size="lg" className="bg-green-600 hover:bg-green-700 text-white">
             <Play className="mr-2 h-4 w-4" /> Start Attendance
           </Button>
@@ -105,65 +86,10 @@ export default async function ClassPage({ params }: ClassPageProps) {
                 <CardTitle>Students</CardTitle>
                 <CardDescription>Manage your class roster ({classDetails.students.length})</CardDescription>
               </div>
-              <Dialog>
-                <DialogTrigger asChild>
-                  <Button size="sm">
-                    <Plus className="mr-2 h-4 w-4" /> Add Student
-                  </Button>
-                </DialogTrigger>
-                <DialogContent>
-                  <DialogHeader>
-                    <DialogTitle>Add Student</DialogTitle>
-                    <DialogDescription>Add a new student to this class roster.</DialogDescription>
-                  </DialogHeader>
-                  <div className="grid gap-4 py-4">
-                    <div className="grid gap-2">
-                      <Label htmlFor="student-first-name">First Name</Label>
-                      <Input id="student-first-name" placeholder="e.g. Jane" />
-                    </div>
-                    <div className="grid gap-2">
-                      <Label htmlFor="student-last-name">Last Name</Label>
-                      <Input id="student-last-name" placeholder="e.g. Doe" />
-                    </div>
-                  </div>
-                  <DialogFooter>
-                    <Button type="submit">Add Student</Button>
-                  </DialogFooter>
-                </DialogContent>
-              </Dialog>
+              <AddStudentDialog classID={classID} />
             </CardHeader>
         <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>First Name</TableHead>
-                    <TableHead>Last Name</TableHead>
-                    <TableHead className="text-right">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {classDetails.students.map((student) => (
-                    <TableRow key={student.id}>
-                      <TableCell className="font-medium">{student.firstName}</TableCell>
-                      <TableCell className="font-medium">{student.lastName}</TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                              <span className="sr-only">Open menu</span>
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem>View History</DropdownMenuItem>
-                            <DropdownMenuItem className="text-red-600">Remove Student</DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+              <StudentsTable students={classDetails.students} />
             </CardContent>
         </Card>
 
