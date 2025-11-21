@@ -1,5 +1,5 @@
 'use server';
-import {prisma} from "@/lib/prisma";
+import { prisma } from "@/lib/prisma";
 
 export async function getClassById(id: number) {
     return prisma.class.findUnique({

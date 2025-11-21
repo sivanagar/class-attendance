@@ -23,49 +23,5 @@ model User {
 }
 
 
-///------------------------------------
-/// Student Model (The attendees)
-///------------------------------------
-model Student {
-    id        Int      @id @default(autoincrement())
-    firstName String
-    lastName  String
-    classes   Class[]    @relation("ClassStudents")
-    attendances Attendance[]
-    createdAt DateTime @default(now())
-    updatedAt DateTime @updatedAt
-}
-
-
-///------------------------------------
-/// Class Model
-///------------------------------------
-model Class {
-    id          Int        @id @default(autoincrement())
-    name        String
-    description String?
-    user        User       @relation(fields: [userId], references: [id])
-    userId      Int
-
-    students     Student[]  @relation("ClassStudents")
-    attendances Attendance[]
-    createdAt   DateTime   @default(now())
-    updatedAt   DateTime   @updatedAt
-}
-
-
-///------------------------------------
-/// Attendance Model
-///------------------------------------
-model Attendance {
-    id        Int      @id @default(autoincrement())
-
-    studentId Int
-    classId   Int
-    date      DateTime
-    attended  Boolean @default(false)
-    student   Student  @relation(fields: [studentId], references: [id])
-    class     Class    @relation(fields: [classId], references: [id])
-}
 
 
