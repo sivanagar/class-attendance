@@ -24,6 +24,7 @@ import {
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import Link from "next/link";
 
 import { Trash2, Play, BarChart3 } from "lucide-react";
 import AddStudentDialog from "@/components/dashboard/AddStudentDialog";
@@ -59,13 +60,18 @@ export default async function ClassPage({ params }: ClassPageProps) {
             name={classDetails.name}
             description={classDetails.description}
           />
-
-          <Button
-            size="lg"
-            className="bg-green-600 hover:bg-green-700 text-white"
-          >
-            <Play className="mr-2 h-4 w-4" /> Start Attendance
-          </Button>
+          
+            <Button
+              asChild
+              size="lg"
+              className="bg-green-600 hover:bg-green-700 text-white"
+              
+            >
+              <Link href={`/dashboard/${classID}/attendance`}>
+              <Play className="mr-2 h-4 w-4" /> Start Attendance
+              </Link>
+            </Button>
+          
         </div>
       </div>
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-7">
