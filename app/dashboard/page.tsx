@@ -1,25 +1,10 @@
 import { getAllClasses } from "@/lib/services/classes";
 import DashboardMetrics from "@/components/dashboard/DashboardMetrics";
-import { ClipboardCheck, Pencil, Eye, Search } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { ClipboardCheck } from "lucide-react";
 import { Card, CardHeader } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
-import {
-  Tooltip,
-  TooltipContent,
-  TooltipProvider,
-  TooltipTrigger,
-} from "@/components/ui/tooltip";
 import Link from "next/link";
 import AddClassDialog from "@/components/dashboard/AddClassDialog";
+import AllClassesTable from "@/components/dashboard/AllClassesTable";
 
 export default async function Dashboard() {
   const classes = await getAllClasses({ include: { students: true , attendances: true} });
@@ -66,88 +51,7 @@ export default async function Dashboard() {
 
       {/* 4. ALL CLASSES TABLE */}
       <section className="space-y-4 pt-4">
-        <div className="flex items-center justify-between">
-          <h3 className="text-lg font-semibold">All Classes</h3>
-          <div className="relative w-64">
-            <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-            <Input placeholder="Search..." className="pl-8 h-9" />
-          </div>
-        </div>
-
-        <Card>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Class Name</TableHead>
-                <TableHead>Students</TableHead>
-
-                <TableHead className="text-right">Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {classes.map((cls) => (
-                <TableRow key={cls.id}>
-                  <TableCell className="font-medium">{cls.name}</TableCell>
-                  <TableCell>{cls.students.length}</TableCell>
-
-                  <TableCell className="text-right">
-                    <div className="flex items-center justify-end gap-2">
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50"
-                            >
-                              <Link href={`/dashboard/${cls.id}/attendance`}>
-                              <ClipboardCheck className="h-4 w-4" />
-                              </Link>
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>Take Attendance</TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              asChild
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8"
-                            >
-                              <Link href={`/dashboard/${cls.id}`}>
-                                <Eye className="h-4 w-4" />
-                              </Link>
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>View Details</TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-
-                      <TooltipProvider>
-                        <Tooltip>
-                          <TooltipTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="icon"
-                              className="h-8 w-8"
-                            >
-                              <Pencil className="h-4 w-4" />
-                            </Button>
-                          </TooltipTrigger>
-                          <TooltipContent>Edit Class</TooltipContent>
-                        </Tooltip>
-                      </TooltipProvider>
-                    </div>
-                  </TableCell>
-                </TableRow>
-              ))}
-            </TableBody>
-          </Table>
-        </Card>
+       <AllClassesTable classes={classes}/> 
       </section>
     </div>
   );
