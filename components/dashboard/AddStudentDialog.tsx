@@ -18,6 +18,7 @@ import { Label } from "@/components/ui/label";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { createStudent } from "@/lib/services/students";
+import { toast } from "sonner";
 
 interface AddStudentDialogProps {
   classID: number;
@@ -39,14 +40,13 @@ export default function AddStudentDialog(classID: AddStudentDialogProps) {
         classId: classID.classID,
       });
       if (result) {
-        // Need to replace the alert with a toast notification later
-        alert("Student added successfully!");
+        toast.success("Student added successfully");
         router.refresh();
         setOpen(false);
       }
     } catch (error) {
       console.error("Error adding student:", error);
-      alert("Failed to add student.");
+      toast.error("Failed to add student");
     } finally {
       setIsLoading(false);
     }

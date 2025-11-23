@@ -5,9 +5,11 @@ import { CalendarIcon, Loader2, Save } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
-
+import { toast } from "sonner";
 import { useState } from "react";
 import { createManyAttendance } from "@/lib/services/attendance";
+import { useRouter } from "next/navigation";
+import { set } from "react-hook-form";
 
 type Student = {
   id: number;
@@ -20,11 +22,13 @@ interface AttendanceTrackerProps {
   className: string;
   students: Student[];
 }
+
 export default function AttendanceTracker({
   classId,
   className,
   students,
 }: AttendanceTrackerProps) {
+
   const [date, setDate] = useState(() => {
     {
       const today = new Date();
@@ -36,34 +40,43 @@ export default function AttendanceTracker({
   }>({});
   const [isLoading, setIsLoading] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const [isDirty, setIsDirty] = useState(true);
+  const router = useRouter();
 
   const markAll = (status: boolean) => {
     const newRecord: Record<number, boolean> = {};
     students.forEach((s) => (newRecord[s.id] = status));
     setAttendance(newRecord);
+    setIsDirty(true);
   };
   const toggleAttendance = (studentId: number) => {
     setAttendance((prev) => ({
       ...prev,
       [studentId]: !prev[studentId],
     }));
+    setIsDirty(true);
   };
 
   const handleSave = async () => {
-    setIsSaving(true);
+    
+    setIsLoading(true);
     const attendanceData = students.map((student) => ({
-            studentId: student.id,
-            classId: classId,
-            date: new Date(date), // Convert string "2025-11-21" to Date object
-            attended: attendance[student.id] || false, // Default to false if undefined
-        }));
-    try{
-      const results =await createManyAttendance(attendanceData);;
+      studentId: student.id,
+      classId: classId,
+      date: new Date(date), // Convert string "2025-11-21" to Date object
+      attended: attendance[student.id] || false, // Default to false if undefined
+    }));
+
+    try {
+      const results = await createManyAttendance(attendanceData);
+      toast.success("Attendance saved successfully!");
+      setIsDirty(false);
     } catch (error) {
-        console.error("Error saving attendance:", error);
+      console.error("Error saving attendance:", error);
+      toast.error("Failed to save attendance. Please try again.");
     } finally {
-    setIsSaving(false);
-  };
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -80,7 +93,7 @@ export default function AttendanceTracker({
           <input
             type="date"
             value={date}
-            onChange={(e) => setDate(e.target.value)}
+            onChange={(e) => {setDate(e.target.value); setIsDirty(true);}}
             className="outline-none text-sm bg-transparent"
           />
         </div>
@@ -151,18 +164,33 @@ export default function AttendanceTracker({
 
         <div className="mt-6 flex justify-end">
           <Button
+            variant="outline"
+            size="lg"
+            className="mx-2 w-full sm:w-auto"
+            onClick={() => router.back()}
+          >
+            Cancel
+          </Button>
+          <Button
             size="lg"
             onClick={handleSave}
-            disabled={isSaving || isLoading}
+            disabled={isLoading || !isDirty}
             className="w-full sm:w-auto"
           >
-            {isSaving && <Loader2 className="mr-2 h-4 w-4 animate-spin" />}
-            <Save className="mr-2 h-4 w-4" />
-            Save Attendance
+            {isLoading ? (
+              <>
+                <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                Saving...
+              </>
+            ) : (
+              <>
+                <Save className="mr-2 h-4 w-4" />
+                Save Attendance
+              </>
+            )}
           </Button>
         </div>
       </CardContent>
     </Card>
   );
 }
-    

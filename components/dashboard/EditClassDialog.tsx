@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import {updateClass} from "@/lib/services/classes";
+import { toast } from "sonner";
 
 
 interface EditClassDialogProps {
@@ -32,14 +33,13 @@ export default function EditClassDialog({id, name, description }: EditClassDialo
               description: classDescription,
           });
           if (result) {
-            // Need to replace the alert with a toast notification later
-            alert("Success!");
+            toast.success("Class updated successfully");            
             router.refresh();
             setOpen(false);
 
           }else {
                   
-                  alert("Failed to update class");
+              toast.error("Failed to update class.");
               }
           } catch (error) {
               // Handle network/crash error

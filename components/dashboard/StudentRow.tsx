@@ -22,6 +22,7 @@ import { useState } from "react";
 import { deleteStudent } from "@/lib/services/students";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
 
 interface StudentRowProps {
   student: {
@@ -46,13 +47,12 @@ export default function StudentRow(student: StudentRowProps) {
     try {
       const result = await deleteStudent(studentId);
       if (result) {
-        // Need to replace the alert with a toast notification later
-        alert("Success!");
+        toast.success("Student deleted successfully");
         router.refresh();
       }
     } catch (error) {
       console.error("Error deleting student:", error);
-      alert("Failed to delete student.");
+      toast.error("Failed to delete student.");
     } finally {
       setIsLoading(false);
       setOpen(false);

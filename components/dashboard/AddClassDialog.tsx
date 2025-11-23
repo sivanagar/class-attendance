@@ -16,6 +16,7 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { createClass } from "@/lib/services/classes";
+import { toast } from "sonner";
 
 export default function AddClassDialog() {
   const router = useRouter();
@@ -76,16 +77,16 @@ export default function AddClassDialog() {
         setName("");
         setDescription("");
         setStudents([]);
-
+        toast.success("Class created successfully");
         // Refresh and Close
         router.refresh();
         setOpen(false);
       } else {
-        alert("Failed to create class");
+        toast.error("Failed to create class" );
       }
     } catch (error) {
       console.error(error);
-      alert("Something went wrong");
+    toast.error("Failed to create class" );
     } finally {
       setIsLoading(false);
     }
