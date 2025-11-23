@@ -11,10 +11,11 @@ export async function getClassById(id: number) {
     });
 }
 
-export async function getAllClasses(p0: { include: { students: boolean; }; }) {
+export async function getAllClasses(p0: { include: { students: boolean, attendances: boolean }; }) {
     return prisma.class.findMany({
         include: {
             students: true,
+            attendances: true,
         },
     });
 }

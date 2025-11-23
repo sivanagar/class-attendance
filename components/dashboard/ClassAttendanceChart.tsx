@@ -17,6 +17,7 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart"
 import { BarChart3 } from "lucide-react";
+import { attendatePerDateMetrics } from "@/lib/utils/dataToMetrics";
 
 interface ClassAttendanceChartProps {
     attendanceData: Array<{
@@ -26,38 +27,28 @@ interface ClassAttendanceChartProps {
 }
 
 export default function ClassAttendanceChart(attendanceData : ClassAttendanceChartProps) {
-//     const chartData = [
-//   { Date: "January", present: 186, absent: 80 },
-//   { Date: "February", present: 305, absent: 200 },
-//   { Date: "March", present: 237, absent: 120 },
-//   { Date: "April", present: 73, absent: 190 },
-//   { Date: "May", present: 209, absent: 130 },
-//   { Date: "June", present: 214, absent: 140 },
-// ]
-const chartData: { Date: string; present: number; absent: number; }[] = []
-console.log("Attendance Data:", attendanceData.attendanceData);
-for (const record of attendanceData.attendanceData) {
 
-    const date = new Date(record.date).toLocaleDateString();
-    const existingEntry = chartData.find(entry => entry.Date === date);
-    if (existingEntry) {
-        if (record.attended) {
-            existingEntry.present += 1;
-        } else {
-            existingEntry.absent += 1;
-        }
-    } else {
-        chartData.push({
-            Date: date,
-            present: record.attended ? 1 : 0,
-            absent: record.attended ? 0 : 1,
-        });
-    }
-}
-console.log("Chart Data:", chartData);
+// const chartData: { Date: string; present: number; absent: number; }[] = []
+// for (const record of attendanceData.attendanceData) {
 
+//     const date = new Date(record.date).toLocaleDateString();
+//     const existingEntry = chartData.find(entry => entry.Date === date);
+//     if (existingEntry) {
+//         if (record.attended) {
+//             existingEntry.present += 1;
+//         } else {
+//             existingEntry.absent += 1;
+//         }
+//     } else {
+//         chartData.push({
+//             Date: date,
+//             present: record.attended ? 1 : 0,
+//             absent: record.attended ? 0 : 1,
+//         });
+//     }
+// }
 
-
+const chartData = attendatePerDateMetrics(attendanceData);
 
     const chartConfig = {
   present: {

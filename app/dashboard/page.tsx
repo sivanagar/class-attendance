@@ -22,7 +22,7 @@ import Link from "next/link";
 import AddClassDialog from "@/components/dashboard/AddClassDialog";
 
 export default async function Dashboard() {
-  const classes = await getAllClasses({ include: { students: true } });
+  const classes = await getAllClasses({ include: { students: true , attendances: true} });
 
   return (
     <div className="container mx-auto flex-1 space-y-8 p-8 pt-6 bg-muted/5">
@@ -48,10 +48,12 @@ export default async function Dashboard() {
               style={{ borderLeftColor: "hsl(var(--primary))" }}
             >
               <CardHeader className="p-4 space-y-1">
-                <div className="flex justify-between items-start">
+                <div className="flex justify-between items-start min-w-0">
                   <h4 className="font-semibold truncate pr-2">{cls.name}</h4>
                   {/* Taking attendance */}
+                  <Link href={`/dashboard/${cls.id}/attendance`}>
                   <ClipboardCheck className="h-4 w-4 text-muted-foreground group-hover:text-primary transition-colors" />
+                  </Link>
                 </div>
                 <p className="text-xs text-muted-foreground">
                   {cls.students.length} Students
