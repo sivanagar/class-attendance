@@ -26,9 +26,10 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 
-import { Trash2, Play, BarChart3 } from "lucide-react";
+import { Trash2, Play } from "lucide-react";
 import AddStudentDialog from "@/components/dashboard/AddStudentDialog";
 import StudentsTable from "@/components/dashboard/StudentsTable";
+import ClassAttendanceChart from "@/components/dashboard/ClassAttendanceChart";
 interface ClassPageProps {
   params: Promise<{ classID: string }>;
 }
@@ -45,6 +46,7 @@ export default async function ClassPage({ params }: ClassPageProps) {
   if (!classDetails) {
     return <div>Class not found</div>;
   }
+  console.log("Class Details:", classDetails.attendances);
 
   return (
     <div className="flex-1 space-y-8 p-8 pt-6">
@@ -91,21 +93,7 @@ export default async function ClassPage({ params }: ClassPageProps) {
         </Card>
 
         <div className="md:col-span-1 lg:col-span-3 space-y-4">
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center">
-                <BarChart3 className="mr-2 h-4 w-4 text-muted-foreground" />
-                Attendance Overview
-              </CardTitle>
-            </CardHeader>
-            <CardContent>
-              {/* Visual Placeholder for Chart */}
-              <div className="h-[200px] w-full rounded-md border-2 border-dashed border-muted bg-muted/10 flex items-center justify-center flex-col text-muted-foreground gap-2">
-                <BarChart3 className="h-10 w-10 opacity-20" />
-                <p className="text-sm">Attendance trends will appear here</p>
-              </div>
-            </CardContent>
-          </Card>
+          <ClassAttendanceChart attendanceData={classDetails.attendances} />
           {/* CLASS DETAILS CARD */}
           <Card>
             <CardHeader>

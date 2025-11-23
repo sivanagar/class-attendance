@@ -98,7 +98,9 @@ export default async function Dashboard() {
                               size="icon"
                               className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50"
                             >
+                              <Link href={`/dashboard/${cls.id}/attendance`}>
                               <ClipboardCheck className="h-4 w-4" />
+                              </Link>
                             </Button>
                           </TooltipTrigger>
                           <TooltipContent>Take Attendance</TooltipContent>

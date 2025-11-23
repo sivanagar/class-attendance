@@ -6,6 +6,7 @@ export async function getClassById(id: number) {
         where: { id },
         include: {
             students: true,
+            attendances: true,
         },
     });
 }
