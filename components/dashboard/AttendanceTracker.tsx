@@ -7,9 +7,8 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
 import { useState } from "react";
-import { createManyAttendance } from "@/lib/services/attendance";
+import { createManyAttendance, getAllAttendanceByClass } from "@/lib/services/attendance";
 import { useRouter } from "next/navigation";
-import { set } from "react-hook-form";
 
 type Student = {
   id: number;
@@ -42,6 +41,8 @@ export default function AttendanceTracker({
   const [isSaving, setIsSaving] = useState(false);
   const [isDirty, setIsDirty] = useState(true);
   const router = useRouter();
+
+  // const attendancedata= await getAllAttendanceByClass(classId, date);
 
   const markAll = (status: boolean) => {
     const newRecord: Record<number, boolean> = {};
