@@ -23,13 +23,13 @@ import { useState } from "react";
 
 
 interface DashboardProps {
-  classes: Class[];
+  classes: (Class & { students?: Student[] })[];
   students?: Student[];
   attendances?: Attendance[];
 }
 
-export default function AllClassesTable(classes: DashboardProps) {
-        const classesData = classes.classes;
+export default function AllClassesTable({ classes }: DashboardProps) {
+        const classesData = classes;
         const [searchTerm, setSearchTerm] = useState("");
         const filteredClasses = classesData.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
@@ -60,7 +60,7 @@ export default function AllClassesTable(classes: DashboardProps) {
             {filteredClasses.map((cls) => (
               <TableRow key={cls.id}>
                 <TableCell className="font-medium">{cls.name}</TableCell>
-                <TableCell>{cls.students.length}</TableCell>
+                <TableCell>{cls.students ? cls.students.length : 0}</TableCell>
 
                 <TableCell className="text-right">
                   <div className="flex items-center justify-end gap-2">

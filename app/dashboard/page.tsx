@@ -10,7 +10,7 @@ import { redirect } from "next/navigation";
 
 export default async function Dashboard() {
   const session = await auth();
-  if (!session || !session.user) redirect("/sign-in");
+  if (!session || !session.user || !session.user.id) redirect("/sign-in");
   console.log("User session:", session);
 
   const classes = await getClassesByUserId(Number(session.user.id));
@@ -22,12 +22,12 @@ export default async function Dashboard() {
           <h2 className="text-3xl font-bold tracking-tight">Dashboard</h2>
           <p className="text-muted-foreground">Welcome back, Professor.</p>
         </div>
-        <AddClassDialog />
+        <AddClassDialog userId={session.user.id}/>
       </div>
       {classes.length === 0 ? (
         <div className="p-4 bg-yellow-100 border border-yellow-300 rounded">
           <p className="text-yellow-800">
-            You have no classes yet. Click "Add Class" to create your first
+            You have no classes yet. Click &quot;Add Class&quot; to create your first
             class.
           </p>
         </div>

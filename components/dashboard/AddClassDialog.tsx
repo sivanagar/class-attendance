@@ -18,7 +18,10 @@ import {
 import { createClass } from "@/lib/services/classes";
 import { toast } from "sonner";
 
-export default function AddClassDialog() {
+
+
+export default function AddClassDialog({ userId }: { userId: string }) {
+  
   const router = useRouter();
   const [open, setOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -68,7 +71,7 @@ export default function AddClassDialog() {
       const result = await createClass({
         name,
         description,
-        userId: 1, // Replace with actual user ID from session/auth context
+        userId: Number(userId),
         students: validStudents,
       });
 
