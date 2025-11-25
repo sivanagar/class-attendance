@@ -23,7 +23,7 @@ export default function Login() {
     const [isLoading, setIsLoading] = useState(false);
 
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: { preventDefault: () => void; }) => {
     e.preventDefault();
     setIsLoading(true);
     try {
@@ -165,3 +165,7 @@ export default function Login() {
     </div>
   );
 }
+function preventDefault() {
+  throw new Error("Function not implemented.");
+}
+
