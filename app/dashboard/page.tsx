@@ -1,13 +1,19 @@
-import { getAllClasses } from "@/lib/services/classes";
+import { getClassesByUserId } from "@/lib/services/classes";
 import DashboardMetrics from "@/components/dashboard/DashboardMetrics";
 import { ClipboardCheck } from "lucide-react";
 import { Card, CardHeader } from "@/components/ui/card";
 import Link from "next/link";
 import AddClassDialog from "@/components/dashboard/AddClassDialog";
 import AllClassesTable from "@/components/dashboard/AllClassesTable";
+import { auth } from "@/lib/auth";
+import { redirect } from "next/navigation";
 
 export default async function Dashboard() {
-  const classes = await getAllClasses({ include: { students: true , attendances: true} });
+  const session = await auth();
+  if (!session || !session.user) redirect("/sign-in");
+  console.log("User session:", session);
+
+  const classes = await getClassesByUserId(Number(session.user.id));
 
   return (
     <div className="container mx-auto flex-1 space-y-8 p-8 pt-6 bg-muted/5">
@@ -18,7 +24,14 @@ export default async function Dashboard() {
         </div>
         <AddClassDialog />
       </div>
-
+      {classes.length === 0 ? (
+        <div className="p-4 bg-yellow-100 border border-yellow-300 rounded">
+          <p className="text-yellow-800">
+            You have no classes yet. Click "Add Class" to create your first
+            class.
+          </p>
+        </div>
+      ): <>
       {/* 2. METRICS SECTION (With Dropdown) */}
       <DashboardMetrics classes={classes} />
 
@@ -53,6 +66,7 @@ export default async function Dashboard() {
       <section className="space-y-4 pt-4">
        <AllClassesTable classes={classes}/> 
       </section>
+      </>}
     </div>
   );
 }

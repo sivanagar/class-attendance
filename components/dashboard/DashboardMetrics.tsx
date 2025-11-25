@@ -16,7 +16,7 @@ interface DashboardProps {
 
 export default function DashboardMetrics( classes : DashboardProps) {
     const classesData = classes.classes;
-    const [selectedClassId, setSelectedClassId] = useState(classesData[0].id);
+    const [selectedClassId, setSelectedClassId] = useState(classesData[0] ? classesData[0].id : 0);
     const currentClass = classesData.find(c => c.id === selectedClassId) || classesData[0];
 
     return (<section className="space-y-4">
@@ -49,18 +49,18 @@ export default function DashboardMetrics( classes : DashboardProps) {
             </CardHeader>
             <CardContent>
               <div className="text-4xl font-bold flex items-center gap-2">
-                {currentClass.students.length}
+                {currentClass ? currentClass.students.length : 0}
                 <Users className="h-6 w-6 text-muted-foreground opacity-20" />
               </div>
-              <p className="text-xs text-muted-foreground mt-1">Enrolled in {currentClass.name}</p>
+              <p className="text-xs text-muted-foreground mt-1">Enrolled in {currentClass ? currentClass.name : ""}</p>
             </CardContent>
           </Card>
 
           {/* METRIC 2: ATTENDANCE % (Placeholder: CSS Ring) */}
-         <AttendanceRadialChart attendanceData={currentClass.attendances} />
+         <AttendanceRadialChart attendanceData={currentClass ? currentClass.attendances: []} />
 
           {/* METRIC 3: OVER TIME (Placeholder: CSS Bars) */}
-          <ClassAttendanceChart attendanceData={currentClass.attendances} />
+          <ClassAttendanceChart attendanceData={currentClass ? currentClass.attendances: []} />
         </div>
       </section>);
 }

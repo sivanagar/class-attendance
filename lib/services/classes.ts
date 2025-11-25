@@ -11,6 +11,16 @@ export async function getClassById(id: number) {
     });
 }
 
+export async function getClassesByUserId(userId: number) {
+    return prisma.class.findMany({
+        where: { userId },
+        include: {
+            students: true,
+            attendances: true,
+        },
+    });
+}
+
 export async function getAllClasses(p0: { include: { students: boolean, attendances: boolean }; }) {
     return prisma.class.findMany({
         include: {
