@@ -17,7 +17,8 @@ const providers: Provider[] = [
             email: credentials.email as string,
             password: credentials.password as string
           })
-          return user ?? null
+          if (!user) return null
+          return { ...user, id: user.id.toString() }
         }
       })
 ]
