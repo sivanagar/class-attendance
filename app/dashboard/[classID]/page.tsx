@@ -60,7 +60,7 @@ export default async function ClassPage({ params }: ClassPageProps) {
           <EditClassDialog
             id={classID}
             name={classDetails.name}
-            description={classDetails.description}
+            description={classDetails.description || ""}
           />
           
             <Button
