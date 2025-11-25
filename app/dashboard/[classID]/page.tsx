@@ -1,3 +1,4 @@
+
 import { getClassById } from "@/lib/services/classes";
 import EditClassDialog from "@/components/dashboard/EditClassDialog";
 
@@ -30,11 +31,15 @@ import { Trash2, Play } from "lucide-react";
 import AddStudentDialog from "@/components/dashboard/AddStudentDialog";
 import StudentsTable from "@/components/dashboard/StudentsTable";
 import ClassAttendanceChart from "@/components/dashboard/ClassAttendanceChart";
+import ClassDeleteButton from "@/components/dashboard/ClassDeleteButton"
+
+
 interface ClassPageProps {
   params: Promise<{ classID: string }>;
 }
 
 export default async function ClassPage({ params }: ClassPageProps) {
+  
   const resolvedParams = await params;
   const classIDString = resolvedParams.classID;
   const classID = parseInt(classIDString);
@@ -46,7 +51,11 @@ export default async function ClassPage({ params }: ClassPageProps) {
   if (!classDetails) {
     return <div>Class not found</div>;
   }
-  console.log("Class Details:", classDetails.attendances);
+
+  
+  
+  
+
 
   return (
     <div className="flex-1 space-y-8 p-8 pt-6">
@@ -95,6 +104,7 @@ export default async function ClassPage({ params }: ClassPageProps) {
         <div className="md:col-span-1 lg:col-span-3 space-y-4">
           <ClassAttendanceChart attendanceData={classDetails.attendances} />
           {/* CLASS DETAILS CARD */}
+          <ClassDeleteButton classId={classID} className={classDetails.name} />
           <Card>
             <CardHeader>
               <CardTitle>Class Details</CardTitle>
@@ -114,41 +124,7 @@ export default async function ClassPage({ params }: ClassPageProps) {
             </CardContent>
           </Card>
           {/* DANGER ZONE (DELETE BUTTON) */}
-          <Card className="border-red-200 bg-red-50 dark:bg-red-950/10 dark:border-red-900">
-            <CardHeader>
-              <CardTitle className="text-red-600 text-base">
-                Danger Zone
-              </CardTitle>
-            </CardHeader>
-            <CardFooter>
-              <AlertDialog>
-                <AlertDialogTrigger asChild>
-                  <Button variant="destructive" className="w-full">
-                    <Trash2 className="mr-2 h-4 w-4" /> Delete Class
-                  </Button>
-                </AlertDialogTrigger>
-                <AlertDialogContent>
-                  <AlertDialogHeader>
-                    <AlertDialogTitle>
-                      Are you absolutely sure?
-                    </AlertDialogTitle>
-                    <AlertDialogDescription>
-                      This action cannot be undone. This will permanently delete
-                      the class
-                      <strong> {classDetails.name}</strong> and remove all
-                      student data associated with it.
-                    </AlertDialogDescription>
-                  </AlertDialogHeader>
-                  <AlertDialogFooter>
-                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                    <AlertDialogAction className="bg-red-600 hover:bg-red-700">
-                      Delete Class
-                    </AlertDialogAction>
-                  </AlertDialogFooter>
-                </AlertDialogContent>
-              </AlertDialog>
-            </CardFooter>
-          </Card>
+         
         </div>
       </div>
     </div>

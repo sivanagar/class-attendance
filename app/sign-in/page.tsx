@@ -165,7 +165,5 @@ export default function Login() {
     </div>
   );
 }
-function preventDefault() {
-  throw new Error("Function not implemented.");
-}
+
 

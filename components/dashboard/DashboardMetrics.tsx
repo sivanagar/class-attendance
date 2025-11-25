@@ -9,14 +9,17 @@ import ClassAttendanceChart from "./ClassAttendanceChart";
 import AttendanceRadialChart from "./AttendanceRadialChart";
 
 interface DashboardProps {
-  classes: Class[];
+  classes: (Class & {
+    students?: Student[];
+    attendances?: Attendance[];
+  })[];
   students?: Student[];
   attendances?: Attendance[];
 }
 
 export default function DashboardMetrics( classes : DashboardProps) {
     const classesData = classes.classes;
-    const [selectedClassId, setSelectedClassId] = useState(classesData[0] ? classesData[0].id : 0);
+    const [selectedClassId, setSelectedClassId] = useState( classesData[0].id );
     const currentClass = classesData.find(c => c.id === selectedClassId) || classesData[0];
 
     return (<section className="space-y-4">
@@ -49,7 +52,7 @@ export default function DashboardMetrics( classes : DashboardProps) {
             </CardHeader>
             <CardContent>
               <div className="text-4xl font-bold flex items-center gap-2">
-                {currentClass ? currentClass.students.length : 0}
+                {currentClass.students ? currentClass.students.length : 0}
                 <Users className="h-6 w-6 text-muted-foreground opacity-20" />
               </div>
               <p className="text-xs text-muted-foreground mt-1">Enrolled in {currentClass ? currentClass.name : ""}</p>
@@ -57,10 +60,10 @@ export default function DashboardMetrics( classes : DashboardProps) {
           </Card>
 
           {/* METRIC 2: ATTENDANCE % (Placeholder: CSS Ring) */}
-         <AttendanceRadialChart attendanceData={currentClass ? currentClass.attendances: []} />
+         <AttendanceRadialChart attendanceData={currentClass?.attendances || []} />
 
           {/* METRIC 3: OVER TIME (Placeholder: CSS Bars) */}
-          <ClassAttendanceChart attendanceData={currentClass ? currentClass.attendances: []} />
+          <ClassAttendanceChart attendanceData={currentClass?.attendances || []}/>
         </div>
       </section>);
 }
