@@ -36,7 +36,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       return token
     },
     session({ session, token }) {
-      session.user.id = token.id
+      session.user.id = String(token.id)
       return session
     },
   },
