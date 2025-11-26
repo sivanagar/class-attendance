@@ -18,9 +18,9 @@ import {
   TooltipTrigger,
 } from "@/components/ui/tooltip";
 import Link from "next/link";
-import { Attendance, Class, Student } from '@prisma/client'
+import { Attendance, Class, Student } from "@prisma/client";
 import { useState } from "react";
-
+import { useRouter } from "next/navigation";
 
 interface DashboardProps {
   classes: (Class & { students?: Student[] })[];
@@ -29,11 +29,15 @@ interface DashboardProps {
 }
 
 export default function AllClassesTable({ classes }: DashboardProps) {
-        const classesData = classes;
-        const [searchTerm, setSearchTerm] = useState("");
-        const filteredClasses = classesData.filter((item) =>
+  const router = useRouter();
+  const classesData = classes;
+  const [searchTerm, setSearchTerm] = useState("");
+  const filteredClasses = classesData.filter((item) =>
     item.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
+  const handleRowClick = (classId: number) => {
+    router.push(`/dashboard/${classId}`);
+  };
 
   return (
     <div>
@@ -41,8 +45,12 @@ export default function AllClassesTable({ classes }: DashboardProps) {
         <h3 className="text-lg font-semibold">All Classes</h3>
         <div className="relative w-64 ">
           <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
-          <Input placeholder="Search..." className="pl-8 h-9 " value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)} />
+          <Input
+            placeholder="Search..."
+            className="pl-8 h-9 "
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
         </div>
       </div>
 
@@ -58,7 +66,11 @@ export default function AllClassesTable({ classes }: DashboardProps) {
           </TableHeader>
           <TableBody>
             {filteredClasses.map((cls) => (
-              <TableRow key={cls.id}>
+              <TableRow
+                key={cls.id}
+                className="cursor-pointer hover:bg-muted/50 transition-colors"
+                onClick={() => handleRowClick(cls.id)}
+              >
                 <TableCell className="font-medium">{cls.name}</TableCell>
                 <TableCell>{cls.students ? cls.students.length : 0}</TableCell>
 
@@ -71,6 +83,7 @@ export default function AllClassesTable({ classes }: DashboardProps) {
                             variant="ghost"
                             size="icon"
                             className="h-8 w-8 text-green-600 hover:text-green-700 hover:bg-green-50"
+                            onClick={(e) => e.stopPropagation()}
                           >
                             <Link href={`/dashboard/${cls.id}/attendance`}>
                               <ClipboardCheck className="h-4 w-4" />
@@ -89,6 +102,7 @@ export default function AllClassesTable({ classes }: DashboardProps) {
                             variant="ghost"
                             size="icon"
                             className="h-8 w-8"
+                            onClick={(e) => e.stopPropagation()}
                           >
                             <Link href={`/dashboard/${cls.id}`}>
                               <Eye className="h-4 w-4" />
@@ -99,7 +113,7 @@ export default function AllClassesTable({ classes }: DashboardProps) {
                       </Tooltip>
                     </TooltipProvider>
 
-                    <TooltipProvider>
+                    {/* <TooltipProvider>
                       <Tooltip>
                         <TooltipTrigger asChild>
                           <Button
@@ -112,7 +126,7 @@ export default function AllClassesTable({ classes }: DashboardProps) {
                         </TooltipTrigger>
                         <TooltipContent>Edit Class</TooltipContent>
                       </Tooltip>
-                    </TooltipProvider>
+                    </TooltipProvider> */}
                   </div>
                 </TableCell>
               </TableRow>
