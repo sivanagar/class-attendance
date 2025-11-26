@@ -27,12 +27,10 @@ interface AddStudentDialogProps {
 export default function AddStudentDialog(classID: AddStudentDialogProps) {
   const router = useRouter();
   const [open, setOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
 
   const handleSubmit = async () => {
-    setIsLoading(true);
     try {
       const result = await createStudent({
         firstName: firstName,
@@ -48,7 +46,6 @@ export default function AddStudentDialog(classID: AddStudentDialogProps) {
       console.error("Error adding student:", error);
       toast.error("Failed to add student");
     } finally {
-      setIsLoading(false);
     }
   };
 

@@ -22,10 +22,8 @@ export default function EditClassDialog({id, name, description }: EditClassDialo
     const [open, setOpen] = useState(false);
     const [className, setClassName] = useState(name);
     const [classDescription, setClassDescription] = useState(description);
-    const [isLoading, setIsLoading] = useState(false);
     
       const handleSubmit = async () => {
-          setIsLoading(true);
         
           try {
             const result = await updateClass(id, {
@@ -46,7 +44,6 @@ export default function EditClassDialog({id, name, description }: EditClassDialo
               console.error("Submission error:", error);
               alert("Something went wrong.");
           } finally {
-              setIsLoading(false); 
           }
           
             

@@ -39,11 +39,9 @@ export default function StudentRow(student: StudentRowProps) {
     student.student.lastName,
   ];
   const [open, setOpen] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
 
   const handleDeleteStudent = async () => {
-    setIsLoading(true);
     try {
       const result = await deleteStudent(studentId);
       if (result) {
@@ -54,15 +52,10 @@ export default function StudentRow(student: StudentRowProps) {
       console.error("Error deleting student:", error);
       toast.error("Failed to delete student.");
     } finally {
-      setIsLoading(false);
       setOpen(false);
     }
   };
 
-  const handleViewHistory = () => {
-    // Implement view history logic here
-    console.log("View history for student with ID:", studentId);
-  };
 
   return (
     <TableRow key={studentId}>

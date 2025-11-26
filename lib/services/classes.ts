@@ -21,14 +21,6 @@ export async function getClassesByUserId(userId: number) {
     });
 }
 
-export async function getAllClasses(p0: { include: { students: boolean, attendances: boolean }; }) {
-    return prisma.class.findMany({
-        include: {
-            students: true,
-            attendances: true,
-        },
-    });
-}
 
 export async function createClass(data: {
     name: string;

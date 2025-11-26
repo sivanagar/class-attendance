@@ -79,9 +79,7 @@ export async function DELETE(
         return Response.json({ message: "Class deleted" }, { status: 200 });
     } catch (error) {
         console.error("DELETE /api/class/[id] error:", error);
-        if ((error as any).code === 'P2025') {
-             return Response.json({ error: "Class not found" }, { status: 404 });
-        }
+        
         return Response.json({ error: "Internal Server Error" }, { status: 500 });
     }
 }
