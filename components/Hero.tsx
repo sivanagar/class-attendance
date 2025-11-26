@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 
 export default function Hero() {
@@ -41,13 +42,14 @@ export default function Hero() {
 
         {/* 3. The Visual Proof (Dashboard Preview) */}
         <section className="container mx-auto max-w-5xl py-12 lg:py-24">
-            <div className="relative overflow-hidden rounded-xl border bg-background shadow-2xl">
+            <div className="relative overflow-hidden rounded-xl bg-background shadow-2xl">
                {/* PLACEHOLDER: Replace this div with an <img> of your dashboard later */}
-               <div className="flex h-[400px] w-full items-center justify-center bg-muted/50">
+               <Image src="/DashboardScreenShot.png" alt="Dashboard Screenshot" width={1200} height={800} className="w-full h-auto"/>
+               {/* <div className="flex h-[400px] w-full items-center justify-center bg-muted/50">
                   <p className="text-muted-foreground">
                     [ Dashboard Screenshot Placeholder ]
                   </p>
-               </div>
+               </div> */}
             </div>
         </section>
       

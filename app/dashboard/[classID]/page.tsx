@@ -89,7 +89,7 @@ export default async function ClassPage({ params }: ClassPageProps) {
         <div className="md:col-span-1 lg:col-span-3 space-y-4">
           <ClassAttendanceChart attendanceData={classDetails.attendances} />
           {/* CLASS DETAILS CARD */}
-          <ClassDeleteButton classId={classID} className={classDetails.name} />
+          
           <Card>
             <CardHeader>
               <CardTitle>Class Details</CardTitle>
@@ -109,6 +109,7 @@ export default async function ClassPage({ params }: ClassPageProps) {
             </CardContent>
           </Card>
           {/* DANGER ZONE (DELETE BUTTON) */}
+          <ClassDeleteButton classId={classID} className={classDetails.name} />
          
         </div>
       </div>
