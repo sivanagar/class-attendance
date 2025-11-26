@@ -77,9 +77,9 @@ export default function StudentRow(student: StudentRowProps) {
             </Button>
           </DropdownMenuTrigger>
           <DropdownMenuContent align="end">
-            <DropdownMenuItem onSelect={handleViewHistory}>
+            {/* <DropdownMenuItem onSelect={handleViewHistory}>
               View History
-            </DropdownMenuItem>
+            </DropdownMenuItem> */}
             <DropdownMenuItem
               className="text-red-600"
               onSelect={() => setOpen(true)}
