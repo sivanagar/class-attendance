@@ -6,9 +6,11 @@ import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { useState } from "react";
-import { createManyAttendance, getAllAttendanceByClass } from "@/lib/services/attendance";
+import { useEffect, useMemo, useState } from "react";
+import { createManyAttendance, updateManyAttendance } from "@/lib/services/attendance";
 import { useRouter } from "next/navigation";
+import { Attendance } from "@prisma/client";
+import { normalizeDate } from "@/lib/utils";
 
 type Student = {
   id: number;
@@ -20,58 +22,98 @@ interface AttendanceTrackerProps {
   classId: number;
   className: string;
   students: Student[];
+  attendances?: Attendance[];
 }
 
 export default function AttendanceTracker({
   classId,
   className,
   students,
+  attendances =[],
 }: AttendanceTrackerProps) {
+
+  const router = useRouter();
 
   const [date, setDate] = useState(() => {
     {
       const today = new Date();
-      return today.toISOString().split("T")[0];
+      return normalizeDate(today).toISOString().split("T")[0];
     }
   });
-  const [attendance, setAttendance] = useState<{
-    [studentId: number]: boolean;
-  }>({});
+  const [attendanceMap, setAttendanceMap] = useState<Record<number, boolean>>({});
   const [isLoading, setIsLoading] = useState(false);
-  const [isSaving, setIsSaving] = useState(false);
   const [isDirty, setIsDirty] = useState(true);
-  const router = useRouter();
+  
+  const existingRecordsForDate = useMemo(() => {
+    const selectedDate = normalizeDate(new Date(date)).getTime();
+    return attendances.filter(
+      (a) => normalizeDate(a.date).getTime() === selectedDate
+    );
+  }, [date, attendances]);
 
-  // const attendancedata= await getAllAttendanceByClass(classId, date);
+  const isUpdateMode = existingRecordsForDate.length > 0;
 
-  const markAll = (status: boolean) => {
-    const newRecord: Record<number, boolean> = {};
-    students.forEach((s) => (newRecord[s.id] = status));
-    setAttendance(newRecord);
-    setIsDirty(true);
-  };
+  useEffect(() => {
+    const newMap: Record<number, boolean> = {};
+    if (isUpdateMode) {
+      // If we found records in the database, load them into the switches
+      existingRecordsForDate.forEach((record) => {
+        newMap[record.studentId] = record.attended;
+      });
+    } else {
+      // If no records, default everyone to false (or true, depending on preference)
+      students.forEach((s) => {
+        newMap[s.id] = false;
+      });
+    }
+    setAttendanceMap(newMap);
+    setIsDirty(false);
+  }, [existingRecordsForDate, isUpdateMode, students]);
+  
   const toggleAttendance = (studentId: number) => {
-    setAttendance((prev) => ({
+    setAttendanceMap((prev) => ({
       ...prev,
       [studentId]: !prev[studentId],
     }));
     setIsDirty(true);
   };
 
+
+  const markAll = (status: boolean) => {
+    const newRecord: Record<number, boolean> = {};
+    students.forEach((s) => (newRecord[s.id] = status));
+    setAttendanceMap(newRecord);
+    setIsDirty(true);
+  };
+
+
   const handleSave = async () => {
-    
     setIsLoading(true);
-    const attendanceData = students.map((student) => ({
-      studentId: student.id,
-      classId: classId,
-      date: new Date(date), // Convert string "2025-11-21" to Date object
-      attended: attendance[student.id] || false, // Default to false if undefined
-    }));
 
     try {
-      const results = await createManyAttendance(attendanceData);
-      toast.success("Attendance saved successfully!");
-      setIsDirty(false);
+      if (isUpdateMode) {
+        // Map the EXISTING records to the NEW status
+        const updateData = existingRecordsForDate.map((record) => ({
+          id: record.id, // Database ID
+          attended: attendanceMap[record.studentId] ?? false,
+        }));
+
+        await updateManyAttendance(updateData);
+        toast.success("Attendance updated successfully!");
+       } else {
+        const createData = students.map((student) => ({
+          studentId: student.id,
+          classId: classId,
+          date: new Date(date),
+          attended: attendanceMap[student.id] || false,
+        }));
+        await createManyAttendance(createData);
+        toast.success("Attendance saved successfully!");
+       }
+       setIsDirty(false);
+       router.refresh();
+    
+      
     } catch (error) {
       console.error("Error saving attendance:", error);
       toast.error("Failed to save attendance. Please try again.");
@@ -94,7 +136,7 @@ export default function AttendanceTracker({
           <input
             type="date"
             value={date}
-            onChange={(e) => {setDate(e.target.value); setIsDirty(true);}}
+            onChange={(e) => {setDate(e.target.value)}}
             className="outline-none text-sm bg-transparent"
           />
         </div>
@@ -120,7 +162,7 @@ export default function AttendanceTracker({
           ) : (
             <div className="border rounded-lg divide-y">
               {students.map((student) => {
-                const isPresent = attendance[student.id] || false;
+                const isPresent = attendanceMap[student.id] || false;
                 return (
                   <div
                     key={student.id}
@@ -186,7 +228,7 @@ export default function AttendanceTracker({
             ) : (
               <>
                 <Save className="mr-2 h-4 w-4" />
-                Save Attendance
+                {isUpdateMode ? "Update Attendance" : "Save Attendance"}
               </>
             )}
           </Button>

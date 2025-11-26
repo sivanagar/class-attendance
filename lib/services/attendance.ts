@@ -1,12 +1,7 @@
 'use server';
 
 import { prisma } from "@/lib/prisma";
-
-function normalizeDate(date: Date) {
-  const d = new Date(date);
-  d.setUTCHours(0, 0, 0, 0);
-  return d;
-}
+import { normalizeDate } from "@/lib/utils";
 
 
 export async function getAllAttendanceByClass(classId: number, date:Date) {
@@ -46,5 +41,16 @@ export async function updateAttendance(attendanceId: number, attended: boolean) 
         },
     });
 }
+
+export async function updateManyAttendance(attendances: { id: number; attended: boolean }[]) {
+    await prisma.$transaction(
+        attendances.map(record => 
+            prisma.attendance.update({
+                where: { id: record.id },
+                data: { attended: record.attended },
+            })
+        )
+    )
+}      
 
 

@@ -2,24 +2,13 @@
 import { getClassById } from "@/lib/services/classes";
 import EditClassDialog from "@/components/dashboard/EditClassDialog";
 
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "@/components/ui/alert-dialog";
+
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-  CardFooter,
 } from "@/components/ui/card";
 
 import { Button } from "@/components/ui/button";
@@ -27,7 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import Link from "next/link";
 
-import { Trash2, Play } from "lucide-react";
+import {  Play } from "lucide-react";
 import AddStudentDialog from "@/components/dashboard/AddStudentDialog";
 import StudentsTable from "@/components/dashboard/StudentsTable";
 import ClassAttendanceChart from "@/components/dashboard/ClassAttendanceChart";
@@ -51,10 +40,6 @@ export default async function ClassPage({ params }: ClassPageProps) {
   if (!classDetails) {
     return <div>Class not found</div>;
   }
-
-  
-  
-  
 
 
   return (

@@ -1,6 +1,7 @@
 import AttendanceTracker from "@/components/dashboard/AttendanceTracker";
 import {prisma} from "@/lib/prisma";
 
+
 type Props = {
   params: Promise<{ classID: string }>
 }
@@ -10,14 +11,13 @@ export default async function AttendancePage({params}: Props)  {
     const resolvedParams = await params;
 
     const classId = parseInt(resolvedParams.classID, 10);
-    console.log("Class ID:", classId);
-
-
 
     const classInfo = await prisma.class.findUnique({
         where: {id: classId},
         include: {
-            students: {orderBy: { lastName: 'asc' }}
+            students: {orderBy: { lastName: 'asc' }
+            },
+            attendances: true,
         },
     });
 
@@ -29,7 +29,8 @@ export default async function AttendancePage({params}: Props)  {
             <AttendanceTracker 
                 classId={classInfo.id} 
                 className={classInfo.name} 
-                students={classInfo.students}/>
+                students={classInfo.students}
+                attendances={classInfo.attendances}/>
         </div>
     );
 }
